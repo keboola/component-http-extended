@@ -1,1 +1,1 @@
-Testing functional sample extractor for purposes of the python component template. 
+Simple HTTP ex that allows hashed custom user paras and headers

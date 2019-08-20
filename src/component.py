@@ -19,7 +19,7 @@ SUPPORTED_ENDPOINTS = ['companies', 'deals']
 KEY_USER_PARS = 'user_parameters'
 KEY_PATH = 'path'
 KEY_HEADERS = 'headers'
-KEY_ADDITIONAL_PARS = 'additional_pars'
+KEY_ADDITIONAL_PARS = 'additional_requests_pars'
 KEY_RES_FILE_NAME = 'file_name'
 
 MANDATORY_PARS = [KEY_PATH]
@@ -63,8 +63,18 @@ class Component(KBCEnvHandler):
         if params.get(KEY_HEADERS):
             for h in headers_cfg:
                 headers[h["key"]] = h["value"]
+        additional_params = dict()
+        if params.get(KEY_ADDITIONAL_PARS):
+            for h in params[KEY_ADDITIONAL_PARS]:
+                # convert boolean
+                val = h["value"]
+                if val.lower() in ['false', 'true']:
+                    val = val.lower() in ['true']
+                additional_params[h["key"]] = val
 
-        res = requests.get(params[KEY_PATH], headers=headers)
+        additional_params['headers'] = headers
+
+        res = requests.get(params[KEY_PATH], **additional_params)
         res.raise_for_status()
 
         with open(os.path.join(self.data_path, 'out', 'files', params[KEY_RES_FILE_NAME]), 'w+') as out:

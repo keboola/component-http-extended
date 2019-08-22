@@ -4,7 +4,7 @@
 
 **Parameters**
 
-- **Path** – An URL of the page.
+- **path** – An URL of the page.
 - **headers** - Array of HTTP headers to send. You may include User parameters as a value
 ```json
 "headers": [

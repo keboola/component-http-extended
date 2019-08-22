@@ -1,1 +1,1 @@
-Simple HTTP ex that allows hashed custom user paras and headers
+Download HTTP resource using GET method with custom headers and request parameters.

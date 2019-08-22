@@ -57,18 +57,21 @@ class Component(KBCEnvHandler):
         params = self.cfg_params  # noqa
 
         headers_cfg = params.get(KEY_HEADERS, {})
+        additional_params_cfg = params.get(KEY_ADDITIONAL_PARS, [])
+
         headers_cfg = self._fill_in_user_parameters(headers_cfg, self.cfg_params.get(KEY_USER_PARS))
+        additional_params_cfg = self._fill_in_user_parameters(additional_params_cfg, self.cfg_params.get(KEY_USER_PARS))
 
         headers = dict()
         if params.get(KEY_HEADERS):
             for h in headers_cfg:
                 headers[h["key"]] = h["value"]
         additional_params = dict()
-        if params.get(KEY_ADDITIONAL_PARS):
-            for h in params[KEY_ADDITIONAL_PARS]:
+        if additional_params_cfg:
+            for h in additional_params_cfg:
                 # convert boolean
                 val = h["value"]
-                if val.lower() in ['false', 'true']:
+                if isinstance(val, str) and val.lower() in ['false', 'true']:
                     val = val.lower() in ['true']
                 additional_params[h["key"]] = val
 

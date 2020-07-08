@@ -83,7 +83,8 @@ class Component(KBCEnvHandler):
 
         res_file_path = os.path.join(self.data_path, 'out', 'files', params[KEY_RES_FILE_NAME])
         with open(res_file_path, 'w+') as out:
-            out.write(res.text)
+            for chunk in res.iter_content(chunk_size=8192):
+                    out.write(chunk)
 
         if params.get(KEY_RES_TAG):
             self.configuration.write_file_manifest(res_file_path, file_tags=[params[KEY_RES_TAG]], is_permanent=False)

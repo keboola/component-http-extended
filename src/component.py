@@ -82,7 +82,7 @@ class Component(KBCEnvHandler):
         res.raise_for_status()
 
         res_file_path = os.path.join(self.data_path, 'out', 'files', params[KEY_RES_FILE_NAME])
-        with open(res_file_path, 'w+') as out:
+        with open(res_file_path, 'wb+') as out:
             for chunk in res.iter_content(chunk_size=8192):
                 out.write(chunk)
 

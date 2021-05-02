@@ -22,7 +22,7 @@ KEY_HEADERS = 'headers'
 KEY_ADDITIONAL_PARS = 'additional_requests_pars'
 KEY_RES_FILE_NAME = 'file_name'
 
-MANDATORY_PARS = [KEY_PATH]
+MANDATORY_PARS = [KEY_PATH, KEY_RES_FILE_NAME]
 MANDATORY_IMAGE_PARS = []
 
 APP_VERSION = '0.0.1'
@@ -41,7 +41,7 @@ class Component(KBCEnvHandler):
         logging.info('Loading configuration...')
 
         try:
-            self.validate_config()
+            self.validate_config(MANDATORY_PARS)
             self.validate_image_parameters(MANDATORY_IMAGE_PARS)
         except ValueError as e:
             logging.error(e)
@@ -57,10 +57,18 @@ class Component(KBCEnvHandler):
         params = self.cfg_params  # noqa
 
         headers_cfg = params.get(KEY_HEADERS, {})
-        additional_params_cfg = params.get(KEY_ADDITIONAL_PARS, [])
 
-        headers_cfg = self._fill_in_user_parameters(headers_cfg, self.cfg_params.get(KEY_USER_PARS))
-        additional_params_cfg = self._fill_in_user_parameters(additional_params_cfg, self.cfg_params.get(KEY_USER_PARS))
+        if headers_cfg and not isinstance(headers_cfg, list):
+            raise ValueError("Headers parameters is not a list of headers, edit your configuration")
+
+        additional_params_cfg = params.get(KEY_ADDITIONAL_PARS, [])
+        users_params = params.get(KEY_USER_PARS, [])
+
+        if headers_cfg:
+            headers_cfg = self._fill_in_user_parameters(headers_cfg, users_params)
+
+        if additional_params_cfg:
+            additional_params_cfg = self._fill_in_user_parameters(additional_params_cfg, users_params)
 
         headers = dict()
         if params.get(KEY_HEADERS):
@@ -155,9 +163,9 @@ class Component(KBCEnvHandler):
         Main entrypoint
 """
 if __name__ == "__main__":
-    if len(sys.argv) > 1:
-        debug = sys.argv[1]
-    else:
-        debug = True
-    comp = Component(debug)
-    comp.run()
+    try:
+        comp = Component()
+        comp.run()
+    except Exception as exc:
+        logging.exception(exc)
+        exit(2)

@@ -5,7 +5,7 @@
 - **headers** - Array of HTTP headers to send. You may include User parameters as a value
 ```json
 "headers": [
-      {
+      {__
         "key": "Authorization",
         "value": {
           "attr": "#token"
@@ -41,3 +41,56 @@ within the configuration (recommended for passwords). The value may be scalar or
           "attr": "#token"
         }
 ```
+
+## Configruation example
+
+```json
+{
+    "path": "https://example.com",
+    "file_name": "test.csv",
+    "user_parameters": {
+      "#token": "Bearer xxx",
+      "date": {
+        "function": "concat",
+        "args": [
+          {
+            "function": "string_to_date",
+            "args": [
+              "yesterday",
+              "%Y-%m-%d"
+            ]
+          },
+          "T"
+        ]
+      }
+    },
+    "headers": [
+      {
+        "key": "Authorization",
+        "value": {
+          "attr": "#token"
+        }
+      }
+    ],
+    "additional_requests_pars": [
+      {
+        "key": "verify",
+        "value": "false"
+      },
+      {
+        "key": "params",
+        "value": {
+          "date": {
+            "attr": "date"
+          }
+        }
+      }
+    ],
+    "debug": true
+  }
+```
+
+The above will call GET `https://example.com/?date=2019-08-21T` with header `Authorization: Bearer xxx`
+
+Actually by calling `requests.get(headers={'Authorization': 'Bearer xxx'}, params={'date':'2019-08-21T'}`
+

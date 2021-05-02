@@ -6,7 +6,6 @@ Template Component main class.
 import json
 import logging
 import os
-import sys
 
 import requests
 from kbc.env_handler import KBCEnvHandler

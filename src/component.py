@@ -6,11 +6,11 @@ Template Component main class.
 import json
 import logging
 import os
+from pathlib import Path
+
 import requests
-import sys
 from kbc.env_handler import KBCEnvHandler
 from nested_lookup import nested_lookup
-from pathlib import Path
 
 # global constants
 SUPPORTED_ENDPOINTS = ['companies', 'deals']

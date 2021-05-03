@@ -5,6 +5,8 @@
 **Parameters**
 
 - **path** – An URL of the page.
+- **file_name** - result file name
+- **tag** - optional tag of the file - manifest is created with `permanent=false`
 - **headers** - Array of HTTP headers to send. You may include User parameters as a value
 ```json
 "headers": [

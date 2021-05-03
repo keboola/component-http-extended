@@ -20,6 +20,7 @@ KEY_PATH = 'path'
 KEY_HEADERS = 'headers'
 KEY_ADDITIONAL_PARS = 'additional_requests_pars'
 KEY_RES_FILE_NAME = 'file_name'
+KEY_RES_TAG = 'tag'
 
 MANDATORY_PARS = [KEY_PATH, KEY_RES_FILE_NAME]
 MANDATORY_IMAGE_PARS = []
@@ -87,8 +88,13 @@ class Component(KBCEnvHandler):
         res = requests.get(params[KEY_PATH], **additional_params)
         res.raise_for_status()
 
-        with open(os.path.join(self.data_path, 'out', 'files', params[KEY_RES_FILE_NAME]), 'w+') as out:
-            out.write(res.text)
+        res_file_path = os.path.join(self.data_path, 'out', 'files', params[KEY_RES_FILE_NAME])
+        with open(res_file_path, 'wb+') as out:
+            for chunk in res.iter_content(chunk_size=8192):
+                out.write(chunk)
+
+        if params.get(KEY_RES_TAG):
+            self.configuration.write_file_manifest(res_file_path, file_tags=[params[KEY_RES_TAG]], is_permanent=False)
 
         logging.info("Extraction finished")
 

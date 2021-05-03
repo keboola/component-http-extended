@@ -22,7 +22,7 @@
 
 ### user_parameters
 
-A list of user parameters that is are accessible from within headers and additional parameters. This is useful for storing
+A list of user parameters that is are accessible from within `headers` and `additional_requests_pars`. This is useful for storing
 for example user credentials that are to be filled in a login form. Appending `#` sign before the attribute name will hash the value and store it securely
 within the configuration (recommended for passwords). The value may be scalar or a supported function. You can access user parameters vis:
 

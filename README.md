@@ -45,6 +45,7 @@ within the configuration (recommended for passwords). The value may be scalar or
 **Supported keys**:
 
 - `params`: (optional) Dictionary, http query parameters to be sent with a request. e.g.
+
  ```
 {
         "key": "params",
@@ -52,17 +53,20 @@ within the configuration (recommended for passwords). The value may be scalar or
           "date": "2020-01-01"
         }
 ```
+
 - `cookies`: (optional) Dict to send with the request. e.g. `{"sessioncookie": "123456789"}`
 - `timeout`: (optional) How many seconds to wait for the server to send data
         before giving up, as a float.
 - `allow_redirects`: (optional) Boolean. Defaults to `True`.
 - `proxies`: (optional) Dictionary mapping protocol to the URL of the proxy. e.g. 
+
 ```
 {
   "http": "http://10.10.1.10:3128",
   "https": "http://10.10.1.10:1080"
 }
 ```
+
 - `verify`: (optional) Boolean controls whether we verify
             the server's TLS certificate, Defaults to `True`. 
 

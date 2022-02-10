@@ -75,6 +75,7 @@ class Component(KBCEnvHandler):
         if additional_params_cfg:
             additional_params_cfg = self._fill_in_user_parameters(additional_params_cfg, users_params)
 
+        path = self._fill_in_user_parameters({"path": params[KEY_PATH]}, users_params)['path']
         headers = dict()
         if params.get(KEY_HEADERS):
             for h in headers_cfg:
@@ -92,7 +93,7 @@ class Component(KBCEnvHandler):
         # avoid loading all in memory
         additional_params['stream'] = True
 
-        res = requests.get(params[KEY_PATH], **additional_params)
+        res = requests.get(path, **additional_params)
         res.raise_for_status()
 
         res_file_path = os.path.join(self.data_path, 'out', 'files', params[KEY_RES_FILE_NAME])

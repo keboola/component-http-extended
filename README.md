@@ -1,5 +1,7 @@
 # Simple HTTP ex that allows hashed custom user paras and headers
 
+This component is a configurable HTTP client that makes GET requests to specified endpoints and saves the response as a file. It supports customization through headers, additional parameters, and user-defined functions for parameter transformation.
+
 ## Configuration 
 
 **Parameters**

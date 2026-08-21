@@ -28,7 +28,7 @@ def _mock_response(status_code, reason, content=b''):
     """
     Builds a requests.Response-like mock that mimics raise_for_status() for the given status code.
     """
-    response = mock.MagicMock()
+    response = mock.Mock(spec=requests.Response)
     response.status_code = status_code
     response.reason = reason
     response.iter_content.return_value = [content] if content else []

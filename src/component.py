@@ -29,6 +29,13 @@ MANDATORY_IMAGE_PARS = []
 APP_VERSION = '0.0.1'
 
 
+class UserException(Exception):
+    """
+    Raised for failures the end user can fix themselves (e.g. a wrong URL or invalid credentials).
+    Surfaced by the entrypoint as a user error (exit code 1) instead of an application error (exit code 2).
+    """
+
+
 class Component(KBCEnvHandler):
 
     def __init__(self, debug=False):
@@ -94,7 +101,19 @@ class Component(KBCEnvHandler):
         additional_params['stream'] = True
 
         res = requests.get(path, **additional_params)
-        res.raise_for_status()
+        try:
+            res.raise_for_status()
+        except requests.exceptions.HTTPError as http_error:
+            # A 4xx means the request itself was rejected - the URL, the query parameters or the credentials
+            # in the configuration are wrong. Re-raise so the job still fails, but as a user error the user
+            # can act on, instead of an opaque application error.
+            if 400 <= res.status_code < 500:
+                raise UserException(
+                    F'The request to "{path}" failed with HTTP {res.status_code} ({res.reason}). '
+                    'Please check that the URL is correct and reachable, that the requested resource exists, '
+                    'and that any credentials, headers or additional request parameters in the configuration '
+                    'are valid.') from http_error
+            raise
 
         res_file_path = os.path.join(self.data_path, 'out', 'files', params[KEY_RES_FILE_NAME])
         with open(res_file_path, 'wb+') as out:
@@ -179,6 +198,9 @@ if __name__ == "__main__":
     try:
         comp = Component()
         comp.run()
+    except UserException as exc:
+        logging.error(exc)
+        exit(1)
     except Exception as exc:
         logging.exception(exc)
         exit(2)
